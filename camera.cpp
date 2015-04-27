@@ -67,14 +67,19 @@ VideoCapture cap(0); // open the video camera no. 0
 		string path = "img/";
 		imwrite(path + "org_image" + ".jpg", imgRotated);	
 		//cout << "New frame written to " << name << endl;
-
+		
+		long start = (long)time(NULL);
 		Mat imgRedOnly;
 		inRange(imgRotated, Scalar(0, 0, 100), Scalar(50, 50, 255), imgRedOnly);
+		cout << "red frame time : " << (long)time(NULL)  << " " << start << endl;		
+
 		imwrite(path + "red_image" + ".jpg", imgRedOnly);
 
-		
+		start = (long)time(NULL);
 		Mat imgBounded = imgRotated.clone();
 		double obj_width = bound(imgRedOnly, imgBounded);
+		cout << "bound time : " << (long)time(NULL) << " " << start << endl;
+
 		double obj_width_px = (2592/640)*obj_width;
 		cout << "width : " << obj_width_px << " pixels" << endl;		
 		double width_mm = 1.4 * obj_width_px/1000;

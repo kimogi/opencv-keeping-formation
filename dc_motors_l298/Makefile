@@ -1,10 +1,8 @@
-all: chassis_robot
+all: l298-dual
 
-chassis_robot: GPIOClass.o chassis_robot.o
-	g++ -o chassis_robot GPIOClass.o chassis_robot.o
-chassis_robot.o: chassis_robot.cpp
-	g++ -c chassis_robot.cpp
-GPIOClass.o: GPIOClass.h GPIOClass.cpp
-	g++ -c GPIOClass.cpp
+l298-dual: l298-dual.o 
+	g++ -o l298-dual -I/usr/local/include -L/usr/local/lib l298-dual.o -lwiringPi -lpthread
+l298-dual.o: l298-dual.cpp
+	g++ -I/usr/local/include -L/usr/local/lib -c l298-dual.cpp -lwiringPi -lpthread
 clean:
-	rm *.o chassis_robot
+	rm *.o l298-dual

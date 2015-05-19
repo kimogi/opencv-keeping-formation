@@ -24,9 +24,9 @@ wp         rp
 #define ENA 0
 #define PIN_A1 1
 #define PIN_A2 2
-#define ENB 3
-#define PIN_B1 4
-#define PIN_B2 5
+#define PIN_B1 3
+#define PIN_B2 4
+#define ENB 5
 
 #define LOW 0
 #define HIGH 1

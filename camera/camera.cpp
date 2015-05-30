@@ -3,6 +3,7 @@
 #include <ctime>
 #include <iostream>
 #include <string>
+#include <wiringPi.h>
 
 using namespace cv;
 using namespace std;
@@ -37,8 +38,38 @@ double bound(Mat &image, Mat &canvas) {
 	return max_width;
 }
 
+/*
+wp         rp
+0  GPIO_0  17 a1b
+1  GPIO_1  18 a1a
+2  GPIO_2  27 servo
+3  GPIO_3  22 b1b
+4  GPIO_4  23 b1a
+5  GPIO_5  24
+6  GPIO_6  25
+7  GPIO_7  4
+17 GPIO_8  28
+18 GPIO_9  29
+19 GPIO_10 30
+20 GPIO_11 31
+*/
+
+#define LED_SWITCH 7
+
 int main(int argc, char* argv[]) {
-VideoCapture cap(0); // open the video camera no. 0
+	
+	int l=0;
+	for (l=0; l<5; l++)
+	{
+		digitalWrite(LED_SWITCH, HIGH);
+		cout << "led on\n" << endl;
+		sleep(5);
+		digitalWrite(LED_SWITCH, LOW);
+		cout << "led off\n" << endl;
+		sleep(5);
+	}		
+	
+	VideoCapture cap(0); // open the video camera no. 0
 
 	if (!cap.isOpened()) {
 		cout << "Cannot open the video cam" << endl;

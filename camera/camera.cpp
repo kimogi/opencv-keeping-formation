@@ -97,25 +97,31 @@ int main(int argc, char* argv[]) {
 
 		string path = "img/";
 		imwrite(path + "org_image" + ".jpg", imgRotated);	
-		//cout << "New frame written to " << name << endl;
-		
-		long start = (long)time(NULL);
-		Mat imgRedOnly;
-		inRange(imgRotated, Scalar(0, 0, 100), Scalar(50, 50, 255), imgRedOnly);
-		cout << "red frame time : " << (long)time(NULL)  << " " << start << endl;		
 
-		imwrite(path + "red_image" + ".jpg", imgRedOnly);
+		Mat imgHSV;
+                cvtColor(image, imgHSV, COLOR_BGR2HSV);
 
-		start = (long)time(NULL);
+		Mat imgBlueOnly;	
+		inRange(imgHSV, Scalar(180, 50, 50), Scalar(280, 255, 255), imgBlueOnly);
+
+		//morphological opening (remove small objects from the foreground)
+  		erode(imgBlueOnly, imgBlueOnly, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+  		dilate(imgBlueOnly, imgBlueOnly, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) ); 
+
+   		//morphological closing (fill small holes in the foreground)
+  		dilate(imgRedOnly, imgRedOnly, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) ); 
+  		erode(imgRedOnly, imgRedOnly, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );			
+
+		imwrite(path + "blue_image" + ".jpg", imgBlueOnly);
+
 		Mat imgBounded = imgRotated.clone();
-		double obj_width = bound(imgRedOnly, imgBounded);
-		cout << "bound time : " << (long)time(NULL) << " " << start << endl;
-
+		double obj_width = bound(imgBlueOnly, imgBounded);
+		
 		double obj_width_px = (2592/640)*obj_width;
 		cout << "width : " << obj_width_px << " pixels" << endl;		
 		double width_mm = 1.4 * obj_width_px/1000;
 		cout << "width : " << width_mm << " mm" << endl;
-		double real_width = 75;
+		double real_width = 50;
 		cout << "real width : " << real_width << " mm" << endl;
 		double focal_len_mm = 3.6;
 		cout << "focal length : " << focal_len_mm << " mm" << endl;

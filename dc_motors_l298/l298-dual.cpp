@@ -2,28 +2,28 @@
 
 using namespace std;
 
-void backward(int speed) {
+void motors::backward(int speed) {
         softPwmWrite(PIN_A1, 0);
         softPwmWrite(PIN_A2, A_SCALE * speed);
         softPwmWrite(PIN_B1, 0);
         softPwmWrite(PIN_B2, B_SCALE * speed);
 }
 
-void forward(int speed) {
+void motors::forward(int speed) {
         softPwmWrite(PIN_A1, speed);
         softPwmWrite(PIN_A2, 0);
         softPwmWrite(PIN_B1, speed);
         softPwmWrite(PIN_B2, 0);
 }
 
-void left(int speed) {
+void motors::left(int speed) {
         softPwmWrite(PIN_A1, speed);
         softPwmWrite(PIN_A2, 0);
         softPwmWrite(PIN_B1, 0);
         softPwmWrite(PIN_B2, speed);
 }
 
-void right(int speed) {
+void motors::right(int speed) {
         softPwmWrite(PIN_A1, 0);
         softPwmWrite(PIN_A2, speed);
         softPwmWrite(PIN_B1, speed);
@@ -46,24 +46,24 @@ void motorBoff() {
 	analogWrite(ENB, LOW);
 }
 
-void stop () {
+void motors::stop () {
 	softPwmWrite(PIN_A1, 0);
 	softPwmWrite(PIN_A2, 0);
 	softPwmWrite(PIN_B1, 0);
 	softPwmWrite(PIN_B2, 0);
 }
 
-void disableMotors() {
+void motors::disableMotors() {
 	motorAoff();
 	motorBoff();
 }
 
-void enableMotors() {
+void motors::enableMotors() {
 	motorAon();
 	motorBon();
 }
 
-void init()
+void motors::init()
 {
 	if (0 != softPwmCreate (PIN_A1, 0, 100))
                 printf("Falied to create pwm pin AIA");
@@ -74,13 +74,13 @@ void init()
         if (0 != softPwmCreate (PIN_B2, 0, 100))
                 printf("Falied to create pwm pin BIB");
 
-        enableMotors();
+        motors::enableMotors();
 }
 
-void shutdown()
+void motors::shutdown()
 {
-	stop();
-	disableMotors();
+	motors::stop();
+	motors::disableMotors();
 }
 
 /*int main(void) {
@@ -130,5 +130,5 @@ void shutdown()
 		}
 	}
 	disableMotors();
-	return 0; */
-}
+	return 0; 
+} */

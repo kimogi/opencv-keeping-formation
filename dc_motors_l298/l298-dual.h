@@ -33,12 +33,15 @@ wp         rp
 #define B_SCALE 1.0
 #define A_SCALE 1.0
 
-void backward(int speed);
-void forward(int speed);
-void left(int speed);
-void right(int speed);
-void stop();
-void disableMotors();
-void enableMotors();
-void init();
-void shutdown();
+namespace motors
+{
+	void backward(int speed);
+	void forward(int speed);
+	void left(int speed);
+	void right(int speed);
+	void stop();
+	void disableMotors();
+	void enableMotors();
+	void init();
+	void shutdown();
+}

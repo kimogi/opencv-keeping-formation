@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <wiringPi.h>
+#include "../dc_motors_l298/l298-dual.h"
 
 using namespace cv;
 using namespace std;
@@ -46,7 +47,32 @@ long millisSinceEpoch()
 	return mslong;
 }
 
+/*
+wp         rp
+0  GPIO_0  17 a1b
+1  GPIO_1  18 a1a
+2  GPIO_2  27 servo
+3  GPIO_3  22 b1b
+4  GPIO_4  23 b1a
+5  GPIO_5  24
+6  GPIO_6  25
+7  GPIO_7  4
+17 GPIO_8  28
+18 GPIO_9  29
+19 GPIO_10 30
+20 GPIO_11 31
+*/
+
+#define FLASH_PIN 7
+#define SEPARATION_MM 200
+#define ERROR_MM 10
+
 int main(int argc, char* argv[]) {
+	wiringPiSetup();
+  	pinMode(FLASH_PIN, OUTPUT);
+
+	motors::init();	
+
 	VideoCapture cap(0);
 
 	if (!cap.isOpened()) {
@@ -92,7 +118,23 @@ int main(int argc, char* argv[]) {
 		
 		cout << "distance : " << distance << " mm" << endl;
 		cout << "time : " << endTime << "ms" << endl;
+		if (distance > SEPARATION_MM + ERROR_MM)
+		{
+			motors::forward(40);
+			cout << "forward..." << endl;
+		}
+		else if (distance < SEPARATION_MM - ERROR_MM)
+		{
+			motors::backward(40);
+			cout << "backward..." << endl;
+		}
+		else
+		{
+			motors::stop();
+			cout << "idling..." << endl;
+		}					
 	}
 	cap.release();
+	motors::shutdown();
 	return 0;
 }

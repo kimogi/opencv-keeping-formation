@@ -58,6 +58,9 @@ wp         rp
 
 int main(int argc, char* argv[]) {
 	
+	wiringPiSetup();
+  	pinMode(LED_SWITCH, OUTPUT);	
+	
 	int l=0;
 	for (l=0; l<5; l++)
 	{

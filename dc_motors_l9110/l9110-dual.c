@@ -24,7 +24,7 @@ wp         rp
 #define AIA_PIN 1
 #define BIB_PIN 3
 #define BIA_PIN 4
-#define SERVO_PIN 2
+//#define SERVO_PIN 2
 
 #define B_SCALE 0.9
 #define A_SCALE 1.0
@@ -67,10 +67,7 @@ int main(void) {
 		printf("Falied to create pwm pin BIA");
 	if (0 != softPwmCreate (BIB_PIN, 0, 100))
 		printf("Falied to create pwm pin BIB");
-//	if (0 != softPwmCreate (SERVO_PIN, 0, 100))
-//		printf("Falied to create pwm pin SERVO");	
-
-//	softPwmWrite(SERVO_PIN, 0);
+	
 	int speed = 0;
 	char dir = 'f';
 	while (1) {	

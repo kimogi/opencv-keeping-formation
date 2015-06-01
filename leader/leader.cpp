@@ -1,6 +1,7 @@
-#include "l298n-dual.h"
+#include "../dc_motors_l298n/l298n-dual.h"
 
-using namespace motors;
+#define FLASH_PIN 7
+
 using namespace std;
 
 int main(void) {
@@ -10,8 +11,10 @@ int main(void) {
 	pinMode(PIN_A2, OUTPUT);
 	pinMode(PIN_B1, OUTPUT);
 	pinMode(PIN_B2, OUTPUT);	
+	pinMode(FLASH_PIN, OUTPUT);
 
-	init();
+	motors::init();
+	digitalWrite(FLASH_PIN, LOW);
 
 	bool run = 1;
 	while (run) 
@@ -22,23 +25,28 @@ int main(void) {
 		switch(c) {
 			case 'f':   
 				cout << "forward..." << endl;
-        	                forward (speed);
+				digitalWrite(FLASH_PIN, HIGH);
+        	                motors::forward (speed);
     				break;
    			case 'b':    // key down
   				cout << "backward..." << endl;
-        	                backward (speed);
+				digitalWrite(FLASH_PIN, HIGH);
+        	                motors::backward (speed);
 				break;
 			case 'r':    // key right
 				cout << "right..." << endl;
-   		  	  	right (speed);
+				digitalWrite(FLASH_PIN, HIGH);
+   		  	  	motors::right (speed);
 				break;
     			case 'l':    // key left
         			cout << "left..." << endl;
-        	                left (speed);
+				digitalWrite(FLASH_PIN, HIGH);
+        	                motors::left (speed);
 				break;
 			case 's':
 				cout << "stop..." << endl;
-        	               	stop();
+				digitalWrite(FLASH_PIN, LOW);
+        	               	motors::stop();
 				break;
 			case 'e':
 				run = 0;

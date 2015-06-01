@@ -1,4 +1,4 @@
-#include "l298-dual.h"
+#include "l298n-dual.h"
 
 using namespace std;
 

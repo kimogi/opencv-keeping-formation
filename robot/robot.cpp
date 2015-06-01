@@ -1,8 +1,10 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <ctime>
+#include <cmath>
 #include <sys/time.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <wiringPi.h>
 #include "../dc_motors_l298/l298-dual.h"
@@ -39,7 +41,7 @@ double bound(Mat &image, Mat &canvas) {
 	return max_width;
 }
 
-long millisSinceEpoch()
+long long millisSinceEpoch()
 {
 	struct timeval tp;
     	gettimeofday(&tp, NULL);
@@ -64,8 +66,9 @@ wp         rp
 */
 
 #define FLASH_PIN 7
-#define SEPARATION_MM 200
-#define ERROR_MM 10
+#define SEPARATION_MM 400
+#define ERROR_MM 80
+#define SPEED 60
 
 int main(int argc, char* argv[]) {
 	wiringPiSetup();
@@ -75,8 +78,11 @@ int main(int argc, char* argv[]) {
 
 	VideoCapture cap(0);
 
+	ofstream logfile;
+	logfile.open ("log.txt");
+
 	if (!cap.isOpened()) {
-		cout << "Cannot open the video cam" << endl;
+		logfile << "Cannot open the video cam\n";
 		return -1;
 	}
 
@@ -91,7 +97,7 @@ int main(int argc, char* argv[]) {
 		
 		bool bSuccess = cap.read(image);
 		if (!bSuccess) {
-			cout << "Cannot read a frame from video stream" << endl;
+			logfile << "Cannot read a frame from video stream";
 			return 0;
 		}
 		count++;
@@ -116,25 +122,42 @@ int main(int argc, char* argv[]) {
 		double distance = (real_width/width_mm)	* focal_len_mm;
 		long long endTime = millisSinceEpoch() - timeStart;
 		
+		logfile << millisSinceEpoch() << " : " << "distance : " << distance << " mm\n";
 		cout << "distance : " << distance << " mm" << endl;
-		cout << "time : " << endTime << "ms" << endl;
-		if (distance > SEPARATION_MM + ERROR_MM)
-		{
-			motors::forward(40);
-			cout << "forward..." << endl;
-		}
-		else if (distance < SEPARATION_MM - ERROR_MM)
-		{
-			motors::backward(40);
-			cout << "backward..." << endl;
+		logfile << "time : " << endTime << " ms\n";
+
+		if (isfinite(distance) && distance < 4000 && distance > 300)
+		{	
+
+			if (distance > SEPARATION_MM + ERROR_MM)
+			{
+				motors::forward(SPEED);
+				logfile  << millisSinceEpoch() << " : " << "forward...\n";
+				cout << "forward..." << endl;
+			}
+			else if (distance < SEPARATION_MM - ERROR_MM)
+			{
+				motors::backward(SPEED);
+				logfile << millisSinceEpoch() << " : " << "backward...\n";
+				cout << "backwrd..." << endl;
+			}
+			else
+			{
+				motors::stop();
+				logfile << millisSinceEpoch() << " : " << "idling...\n";
+				cout << "idling" << endl;
+			}
 		}
 		else
 		{
 			motors::stop();
-			cout << "idling..." << endl;
-		}					
+              		logfile << millisSinceEpoch() << " : " << "idling...\n";
+                     	cout << "idling" << endl;
+		}
+		logfile.flush();					
 	}
 	cap.release();
 	motors::shutdown();
+	logfile.close();
 	return 0;
 }

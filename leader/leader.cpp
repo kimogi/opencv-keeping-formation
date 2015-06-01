@@ -14,8 +14,8 @@ int main(void) {
 	pinMode(FLASH_PIN, OUTPUT);
 
 	motors::init();
-	digitalWrite(FLASH_PIN, LOW);
-
+	digitalWrite(FLASH_PIN, HIGH);
+	
 	bool run = 1;
 	while (run) 
 	{
@@ -25,27 +25,27 @@ int main(void) {
 		switch(c) {
 			case 'f':   
 				cout << "forward..." << endl;
-				digitalWrite(FLASH_PIN, HIGH);
+				//digitalWrite(FLASH_PIN, HIGH);
         	                motors::forward (speed);
     				break;
    			case 'b':    // key down
   				cout << "backward..." << endl;
-				digitalWrite(FLASH_PIN, HIGH);
+				//digitalWrite(FLASH_PIN, HIGH);
         	                motors::backward (speed);
 				break;
 			case 'r':    // key right
 				cout << "right..." << endl;
-				digitalWrite(FLASH_PIN, HIGH);
+				//digitalWrite(FLASH_PIN, HIGH);
    		  	  	motors::right (speed);
 				break;
     			case 'l':    // key left
         			cout << "left..." << endl;
-				digitalWrite(FLASH_PIN, HIGH);
+				//digitalWrite(FLASH_PIN, HIGH);
         	                motors::left (speed);
 				break;
 			case 's':
 				cout << "stop..." << endl;
-				digitalWrite(FLASH_PIN, LOW);
+				//digitalWrite(FLASH_PIN, LOW);
         	               	motors::stop();
 				break;
 			case 'e':
@@ -53,6 +53,7 @@ int main(void) {
 				break;
 		}
 	}
+	digitalWrite(FLASH_PIN, LOW);
 	return 0; 
 }
 
